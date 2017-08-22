@@ -1,45 +1,51 @@
 @echo off
 setlocal enabledelayedexpansion
 set /p dirpath=Input dirpath:
+::提取文件数量和文件夹大小两列
 for /f "tokens=1,3 delims= " %%a in ('dir /a /s /-c "%dirpath%" ^| findstr "File(s)"') do (echo %%a %%b)>a.txt
+::提取最后一行的总计数量和大小
 for /f "delims=" %%a in (a.txt) do (echo %%a)>a.txt
-for /f "tokens=1,2 delims= " %%a in (a.txt) do (set m=%%a && set n=%%b)
-if %n% lss 1073741824 if %n% geq 1048576 (
-set /a j=%n%/1048576 
+for /f "tokens=1,2 delims= " %%a in (a.txt) do (set contain=%%a && set size=%%b)
+if %size% lss 1073741824 if %size% geq 1048576 (
+set /a sizemb=%size%/1048576 
 echo.
 echo Folder Properties
-echo Number of Files:		 %m% 
-echo Number of MBytes/GBytes:	 !j! MB
+echo Number of Files:		 %contain% 
+echo Number of MBytes/GBytes:	 !sizemb! MB
 echo.
 )
-if %n% lss 1048576 if %n% geq 1024 (
-set /a j=n/1024  
+if %size% lss 1048576 if %size% geq 1024 (
+set /a sizekb=%size%/1024  
 echo.
 echo Folder Properties
-echo Number of Files:		 %m% 
-echo Number of MBytes/GBytes:	 !j! KB
+echo Number of Files:		 %contain% 
+echo Number of MBytes/GBytes:	 !sizekb! KB
 echo.
 ) else (
 echo.
 echo Folder Properties
-echo Number of Files:		 %m% 
-echo Number of MBytes/GBytes:	 !n! Bytes
+echo Number of Files:		 %contain% 
+echo Number of MBytes/GBytes:	 !size! Bytes
 echo.
 )
-if %n% geq 1073741824 (
+if %size% geq 1073741824 (
 set q=1073741824
-set suru=%n%/!q!
+set suru=%size%/!q!
 call :cu0  !suru:/= ! ok
 echo.
 echo Folder Properties
-echo Number of Files:		 %m% 
+echo Number of Files:		 %contain% 
 echo Number of MBytes/GBytes:	 !ok! GB
 echo.
 )
-pause
+echo press any key to exit...
+pause>nul
 del a.txt
 exit
-:cu0 500位内整数除法函数（封装）by @随风 bbs.bathome.net
+::由于转换成GB单位时计算量超过了CMD32位的精度
+::所以在这里采用了
+::500位内整数除法函数（封装）by @随风 bbs.bathome.net
+:cu0 
 setlocal enabledelayedexpansion&set "lin=00000"
 set /a zongw=1000,cs1w=0,cs2w=0,falg=0,x=0
 if "!str!"=="1" Endlocal&set %~3=%ff%!num!&goto :EOF
