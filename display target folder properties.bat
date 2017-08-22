@@ -1,37 +1,39 @@
 @echo off
 setlocal enabledelayedexpansion
-set /p dirpath=Input your dirpath:
+set /p dirpath=Input dirpath:
 for /f "tokens=1,3 delims= " %%a in ('dir /a /s /-c "%dirpath%" ^| findstr "File(s)"') do (echo %%a %%b)>a.txt
 for /f "delims=" %%a in (a.txt) do (echo %%a)>a.txt
 for /f "tokens=1,2 delims= " %%a in (a.txt) do (set m=%%a && set n=%%b)
 if %n% lss 1073741824 if %n% geq 1048576 (
 set /a j=%n%/1048576 
 echo.
-echo ---------------- Folder Properties   ---------------- 
-echo Contains: %m% File^(s^), Size: !j! MB
+echo Folder Properties
+echo Number of Files:		 %m% 
+echo Number of MBytes/GBytes:	 !j! MB
 echo.
 )
 if %n% lss 1048576 if %n% geq 1024 (
 set /a j=n/1024  
 echo.
-echo ---------------- Folder Properties   ----------------
-echo Contains: %m% File^(s^), Size: !j! KB
+echo Folder Properties
+echo Number of Files:		 %m% 
+echo Number of MBytes/GBytes:	 !j! KB
 echo.
 ) else (
 echo.
-echo ---------------- Folder Properties   ----------------
-echo Contains: %m% File^(s^), Size: !n! Bytes
+echo Folder Properties
+echo Number of Files:		 %m% 
+echo Number of MBytes/GBytes:	 !n! Bytes
 echo.
 )
 if %n% geq 1073741824 (
 set q=1073741824
 set suru=%n%/!q!
-)
-call :cu0  %suru:/= % ok
-if %ok% neq 0 (
+call :cu0  !suru:/= ! ok
 echo.
-echo ---------------- Folder Properties   ----------------
-echo Contains: %m% File^(s^), Size: !ok! GB
+echo Folder Properties
+echo Number of Files:		 %m% 
+echo Number of MBytes/GBytes:	 !ok! GB
 echo.
 )
 pause
