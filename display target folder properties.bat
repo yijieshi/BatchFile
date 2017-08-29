@@ -38,9 +38,10 @@ echo Number of Files:		 %contain%
 echo Number of MBytes/GBytes:	 !ok! GB
 echo.
 )
+del a.txt
 echo press any key to exit...
 pause>nul
-del a.txt
+
 exit
 ::由于转换成GB单位时计算量超过了CMD32位的精度
 ::所以在这里采用了
